@@ -3,6 +3,7 @@ use std::collections::BinaryHeap;
 use std::collections::HashMap;
 
 use crate::beam_entry::{BeamEntry, ProbabilityT};
+use crate::sorting::ScoredValue;
 
 
 pub struct BeamState {
@@ -44,7 +45,7 @@ impl BeamState {
 	entries
     }
 
-    pub fn sort_top_n(&mut self, n: usize) -> Vec<(String, ProbabilityT)> {
+    /*pub fn sort_top_n(&mut self, n: usize) -> Vec<(String, ProbabilityT)> {
 	if self.pruning {
 	    self.prune();
 	}
@@ -71,7 +72,7 @@ impl BeamState {
 	entries.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
 	entries
-    }
+    }*/
 
     pub fn prune(&mut self) {
 	self.entries.retain(|_, beam_entry| beam_entry.pr_total > self.pruning_threshold);
@@ -138,7 +139,7 @@ mod tests {
 	assert_eq!(entries[2].0, "a");
     }
 
-    #[test]
+    /*#[test]
     fn test_beam_state_sort_top_n() {
 	let mut beam_state = BeamState::default();
 
@@ -154,5 +155,5 @@ mod tests {
 	assert_eq!(entries[0].0, "b");
 	assert_eq!(entries[1].0, "c");
 	assert_eq!(entries[2].0, "a");
-    }
+    }*/
 }
