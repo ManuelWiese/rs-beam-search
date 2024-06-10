@@ -1,9 +1,7 @@
-use std::cmp::Reverse;
-use std::collections::BinaryHeap;
 use std::collections::HashMap;
 
 use crate::beam_entry::{BeamEntry, ProbabilityT};
-use crate::sorting::ScoredValue;
+use crate::sorting::{ScoredValue, top_n_elements};
 
 
 pub struct BeamState {
@@ -45,34 +43,23 @@ impl BeamState {
 	entries
     }
 
-    /*pub fn sort_top_n(&mut self, n: usize) -> Vec<(String, ProbabilityT)> {
+    pub fn sort_top_n(&mut self, n: usize) -> Vec<(String, ProbabilityT)> {
 	if self.pruning {
 	    self.prune();
 	}
 
-	let mut min_heap = BinaryHeap::with_capacity(n);
-
-	for (key, entry) in &self.entries {
-	    let p_and_string = (entry.pr_total, key.clone());
-	    if min_heap.len() < n {
-		min_heap.push(Reverse(p_and_string));
-	    } else if let Some(Reverse(smallest_p_and_string)) = min_heap.peek() {
-		if p_and_string.0 > smallest_p_and_string.0 {
-		    min_heap.pop();
-		    min_heap.push(Reverse(p_and_string));
-		}
-	    }
-	}
-
-	let mut entries: Vec<(String, ProbabilityT)> = min_heap.into_iter()
-	    .map(|Reverse((pr_total, text))| (text, pr_total))
+	let mut entries = self.entries.iter()
+	    .map(|(key, beam_entry)| ScoredValue::new((key.clone(), beam_entry), beam_entry.pr_total))
 	    .collect::<Vec<_>>();
 
-	// Sort the entries by the second entry (pr_total) in descending order
-	entries.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+	entries = top_n_elements(entries, n);
 
-	entries
-    }*/
+	let results: Vec<(String, ProbabilityT)> = entries.iter()
+	    .map(|scored_value| (scored_value.value.0.clone(), scored_value.score))
+	    .collect::<Vec<_>>();
+
+	results
+    }
 
     pub fn prune(&mut self) {
 	self.entries.retain(|_, beam_entry| beam_entry.pr_total > self.pruning_threshold);
@@ -139,21 +126,25 @@ mod tests {
 	assert_eq!(entries[2].0, "a");
     }
 
-    /*#[test]
+    #[test]
     fn test_beam_state_sort_top_n() {
 	let mut beam_state = BeamState::default();
 
 	beam_state.update(String::from("a"), 0.1, 0.0);
 	beam_state.update(String::from("b"), 0.3, 0.0);
 	beam_state.update(String::from("c"), 0.2, 0.0);
+	beam_state.update(String::from("d"), 0.0, 0.05);
 
-	assert_eq!(beam_state.entries.len(), 3);
+	assert_eq!(beam_state.entries.len(), 4);
 
-	let entries = beam_state.sort_top_n(3);
-	assert_eq!(beam_state.entries.len(), entries.len());
+	let n = 3;
+	let entries = beam_state.sort_top_n(n);
+	assert_eq!(n, entries.len());
 
 	assert_eq!(entries[0].0, "b");
 	assert_eq!(entries[1].0, "c");
 	assert_eq!(entries[2].0, "a");
-    }*/
+
+	println!("{:?}", entries);
+    }
 }
