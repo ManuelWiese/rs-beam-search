@@ -23,7 +23,7 @@ impl<T> PartialOrd for ScoredValue<T> {
 
 impl<T> Ord for ScoredValue<T> {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.partial_cmp(other).unwrap()
+        self.partial_cmp(other).expect("Scores should be comparable")
     }
 }
 
