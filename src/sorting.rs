@@ -37,8 +37,8 @@ impl<T> Eq for ScoredValue<T> {}
 
 /// Returns the top `n` elements with the highest scores from the given vector.
 pub fn top_n_elements<T>(v: Vec<ScoredValue<T>>, n: usize) -> Vec<ScoredValue<T>> {
-    if v.len() == 0 {
-        return v;
+    if v.len() == 0 || n == 0 {
+        return Vec::new();
     }
 
     let mut min_heap = BinaryHeap::with_capacity(n);
@@ -57,9 +57,9 @@ pub fn top_n_elements<T>(v: Vec<ScoredValue<T>>, n: usize) -> Vec<ScoredValue<T>
     let mut entries: Vec<ScoredValue<T>> = min_heap
         .into_iter()
         .map(|Reverse(scored_value)| scored_value)
-        .collect::<Vec<_>>();
+        .collect();
 
-    entries.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap());
+    entries.sort_by(|a, b| b.score.partial_cmp(&a.score).expect("Scores should be comparable"));
 
     entries
 }
