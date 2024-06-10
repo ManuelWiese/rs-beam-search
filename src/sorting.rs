@@ -1,6 +1,7 @@
 use std::cmp::Reverse;
 use std::{cmp::Ordering, collections::BinaryHeap};
 
+/// A struct to hold a value and its associated score.
 #[derive(Debug, Clone)]
 pub struct ScoredValue<T> {
     pub value: T,
@@ -8,6 +9,7 @@ pub struct ScoredValue<T> {
 }
 
 impl<T> ScoredValue<T> {
+    /// Creates a new `ScoredValue` with the given value and score.
     pub fn new(value: T, score: f32) -> ScoredValue<T> {
         ScoredValue { value, score }
     }
@@ -33,6 +35,7 @@ impl<T> PartialEq for ScoredValue<T> {
 
 impl<T> Eq for ScoredValue<T> {}
 
+/// Returns the top `n` elements with the highest scores from the given vector.
 pub fn top_n_elements<T>(v: Vec<ScoredValue<T>>, n: usize) -> Vec<ScoredValue<T>> {
     if v.len() == 0 {
         return v;
