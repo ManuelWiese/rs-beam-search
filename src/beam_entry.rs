@@ -1,6 +1,6 @@
 pub type ProbabilityT = f32;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BeamEntry {
     pub pr_total: ProbabilityT,
     pub pr_non_blank: ProbabilityT,
@@ -20,12 +20,6 @@ impl BeamEntry {
         self.pr_non_blank += pr_non_blank;
         self.pr_blank += pr_blank;
         self.pr_total += pr_blank + pr_non_blank;
-    }
-}
-
-impl Default for BeamEntry {
-    fn default() -> Self {
-        BeamEntry::new(0.0, 0.0)
     }
 }
 
