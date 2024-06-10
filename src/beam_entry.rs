@@ -1,5 +1,7 @@
+/// Type alias for probabilities.
 pub type ProbabilityT = f32;
 
+/// Struct representing a single entry in the beam search algorithm.
 #[derive(Debug, Default)]
 pub struct BeamEntry {
     pub pr_total: ProbabilityT,
@@ -8,6 +10,16 @@ pub struct BeamEntry {
 }
 
 impl BeamEntry {
+    /// Creates a new `BeamEntry` with the given probabilities.
+    ///
+    /// # Arguments
+    ///
+    /// * `pr_non_blank` - Probability of a non-blank token.
+    /// * `pr_blank` - Probability of a blank token.
+    ///
+    /// # Returns
+    ///
+    /// A new `BeamEntry` instance with the provided probabilities.
     pub fn new(pr_non_blank: ProbabilityT, pr_blank: ProbabilityT) -> BeamEntry {
         BeamEntry {
             pr_total: pr_non_blank + pr_blank,
@@ -16,6 +28,12 @@ impl BeamEntry {
         }
     }
 
+    /// Updates the probabilities of the `BeamEntry`.
+    ///
+    /// # Arguments
+    ///
+    /// * `pr_non_blank` - Additional probability of a non-blank token.
+    /// * `pr_blank` - Additional probability of a blank token.
     pub fn update_probabilities(&mut self, pr_non_blank: ProbabilityT, pr_blank: ProbabilityT) {
         self.pr_non_blank += pr_non_blank;
         self.pr_blank += pr_blank;
