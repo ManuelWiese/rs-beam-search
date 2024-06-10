@@ -1,20 +1,15 @@
-use std::{cmp::Ordering, collections::BinaryHeap};
 use std::cmp::Reverse;
-
-
+use std::{cmp::Ordering, collections::BinaryHeap};
 
 #[derive(Debug, Clone)]
 pub struct ScoredValue<T> {
     pub value: T,
-    pub score: f32
+    pub score: f32,
 }
 
 impl<T> ScoredValue<T> {
     pub fn new(value: T, score: f32) -> ScoredValue<T> {
-        ScoredValue {
-            value,
-            score
-        }
+        ScoredValue { value, score }
     }
 }
 
@@ -56,7 +51,8 @@ pub fn top_n_elements<T>(v: Vec<ScoredValue<T>>, n: usize) -> Vec<ScoredValue<T>
         }
     }
 
-    let mut entries: Vec<ScoredValue<T>> = min_heap.into_iter()
+    let mut entries: Vec<ScoredValue<T>> = min_heap
+        .into_iter()
         .map(|Reverse(scored_value)| scored_value)
         .collect::<Vec<_>>();
 
@@ -88,7 +84,7 @@ mod tests {
         let values = vec![
             ScoredValue::new("c", 0.7),
             ScoredValue::new("b", 0.5),
-            ScoredValue::new("a", 1.0)
+            ScoredValue::new("a", 1.0),
         ];
         let sorted = top_n_elements(values, 2);
 
@@ -96,6 +92,4 @@ mod tests {
         assert_eq!("a", sorted[0].value);
         assert_eq!("c", sorted[1].value);
     }
-
-
 }
